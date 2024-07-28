@@ -117,7 +117,7 @@ editor = Agent(
 formatter = Agent(
     role='Content Formatter',
     goal='Format and style the content for optimal readability and visual appeal',
-    backstory='You are an expert in HTML and CSS, with a keen eye for design and user experience. You understand the importance of presentation and aesthetics in enhancing content.',
+    backstory='You are an expert in HTML and CSS, with a keen eye for design and user experience. You understand the importance of presentation and aesthetics in enhancing content.dont put the tittle of the introduction just write the introduction without the introduction tittle',
     llm=llm,
     verbose=True
 )
