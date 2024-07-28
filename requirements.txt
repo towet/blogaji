@@ -1,0 +1,12 @@
+os
+requests
+json
+crewai
+langchain
+typing-extensions
+datetime
+logging
+crewai
+langchain
+requests
+python-dotenv
