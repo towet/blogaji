@@ -125,7 +125,7 @@ formatter = Agent(
 publisher = Agent(
     role='Content Publisher',
     goal='Prepare the formatted content for web publication',
-    backstory='You are responsible for preparing the content for the website, ensuring it fits the required format. You have a thorough understanding of the publishing process and attention to detail.',
+    backstory='You are responsible for preparing the content for the website, ensuring it fits the required format. You have a thorough understanding of the publishing process and attention to detail.do not leave out parts or over summerise ',
     llm=llm,
     verbose=True
 )
@@ -150,9 +150,9 @@ editing_task = Task(
 )
 
 formatting_task = Task(
-    description="Format the blog post using HTML tags. Use appropriate headings (h1 for title, h2 for subtitles), paragraphs, bullet points where necessary, and add inline styles for improved readability. Ensure the content is visually appealing and well-organized.",
+    description="Format the blog post using HTML tags. Use appropriate headings (h1 for title, h2 for subtitles), paragraphs, bullet points where necessary, and add inline styles for improved readability. Ensure the content is visually appealing and well-organized. don not osummerise ensure the whole content required is in the file after the tittle display the teaser without the word teaser and then the rest of the content can follo ",
     agent=formatter,
-    expected_output="An HTML-formatted version of the blog post with appropriate styling and structure."
+    expected_output="An HTML-formatted version of the blog post with appropriate styling and structure.with all the contents needed"
 )
 
 publishing_task = Task(
