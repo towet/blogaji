@@ -5,7 +5,7 @@ crewai
 langchain
 typing-extensions
 datetime
-logging
+
 crewai
 langchain
 requests
