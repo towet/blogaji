@@ -32,7 +32,7 @@ def ask_deepseek(question):
         'stream': False
     }
 
-    response = requests.post(DEEPSEEK_API_URL, headers=headers, json=data)
+    response = requests.post(DEEPSEEK_API_URL, headers=headers, json=data,timeout=60)
 
     if response.status_code == 200:
         response_data = response.json()
