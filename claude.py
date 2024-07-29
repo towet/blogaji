@@ -138,9 +138,9 @@ research_task = Task(
 )
 
 writing_task = Task(
-    description="Write a 500-word blog post about the chosen AI topic. Ensure it is engaging and informative for a general audience. Start with a catchy title and include a compelling introduction, informative body, and a strong conclusion.",
+    description="Write a 1000-word blog post about the chosen AI topic. Ensure it is engaging and informative for a general audience. Start with a catchy title and include a compelling introduction, informative body, and a strong conclusion.",
     agent=writer,
-    expected_output="A 500-word blog post with a catchy title, engaging introduction, informative body, and strong conclusion, covering the chosen AI topic."
+    expected_output="A 1000-word blog post with a catchy title, engaging introduction, informative body, and strong conclusion, covering the chosen AI topic."
 )
 
 editing_task = Task(
