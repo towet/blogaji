@@ -2,7 +2,7 @@ import os
 import requests
 import json
 from crewai import Agent, Task, Crew
-from langchain.tools import DuckDuckGoSearchRun
+from langchain_community.tools import DuckDuckGoSearchRun
 from langchain.llms.base import LLM
 from typing import Optional, List
 import datetime
@@ -11,7 +11,6 @@ import logging
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Set up the DeepSeek API key and URL
 # Set up the DeepSeek API key and URL
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
 DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
@@ -32,7 +31,7 @@ def ask_deepseek(question):
         'stream': False
     }
 
-    response = requests.post(DEEPSEEK_API_URL, headers=headers, json=data,timeout=60)
+    response = requests.post(DEEPSEEK_API_URL, headers=headers, json=data)
 
     if response.status_code == 200:
         response_data = response.json()
@@ -89,76 +88,86 @@ class UnsplashImageTool:
 # Instantiate the Unsplash Image Tool
 unsplash_image_tool = UnsplashImageTool()
 
-# Define agents
+# Define agents with refined prompts
 researcher = Agent(
-    role='AI Researcher',
-    goal='Find the latest and most impactful AI developments',
-    backstory='You are an AI enthusiast with a keen eye for groundbreaking developments in the field. You stay updated with the latest trends and breakthroughs.',
+    role='Technology Research Specialist',
+    goal='Uncover groundbreaking Technological developments ',
+    backstory='You\'re a renowned Technology researcher with a Ph.D. in Computer Science and years of experience at top tech companies. Your expertise allows you to spot emerging trends and understand their implications.',
     llm=llm,
     verbose=True
 )
 
 writer = Agent(
-    role='Content Writer',
-    goal='Create engaging and informative content about AI',
-    backstory='You are a talented writer with a knack for explaining complex AI concepts in an accessible way. You enjoy crafting compelling narratives that captivate your audience.',
+    role=' Technology Storyteller',
+    goal='Craft an engaging narrative that makes complex Technological concepts accessible and exciting to a broad audience',
+    backstory='You\'re a best-selling technology author with a knack for turning intricate topics into page-turners. Your writing has inspired countless readers to explore the world of Technology.',
     llm=llm,
     verbose=True
 )
 
 editor = Agent(
-    role='Content Editor',
-    goal='Ensure the content is high-quality, engaging, and error-free',
-    backstory='You are a meticulous editor with years of experience in polishing technical content. You have a sharp eye for detail and a deep understanding of effective communication.',
+    role='Tech Content Perfectionist',
+    goal='Elevate the blog post to professional publishing standards while maintaining its engaging essence',
+    backstory='You\'ve edited for top tech publications and have a deep understanding of tecnological concepts and effective communication strategies.',
     llm=llm,
     verbose=True
 )
 
 formatter = Agent(
-    role='Content Formatter',
-    goal='Format and style the content for optimal readability and visual appeal',
-    backstory='You are an expert in HTML and CSS, with a keen eye for design and user experience. You understand the importance of presentation and aesthetics in enhancing content.dont put the tittle of the introduction just write the introduction without the introduction tittle',
+    role='Digital Content Architect',
+    goal='Create a visually stunning and user-friendly blog post layout based on the provided content do not add your own content ensure all the contents are captured',
+    backstory='You\'re a web design expert who specializes in creating immersive digital reading experiences. Your designs consistently receive praise for their aesthetics and usability.while formatting do not include the introduction tittle  just proceed to write the introduction  ',
     llm=llm,
     verbose=True
 )
 
 publisher = Agent(
-    role='Content Publisher',
-    goal='Prepare the formatted content for web publication',
-    backstory='You are responsible for preparing the content for the website, ensuring it fits the required format. You have a thorough understanding of the publishing process and attention to detail.do not leave out parts or over summerise ',
+    role='Content Marketing Strategist',
+    goal='Maximize the blog post\'s reach and impact across digital platforms',
+    backstory='You\'ve led content strategies for major tech brands, consistently increasing engagement and conversion rates through data-driven approaches.',
     llm=llm,
     verbose=True
 )
 
-# Define tasks
+# Define tasks with refined descriptions and expected outputs
 research_task = Task(
-    description="Research the latest AI developments and identify a groundbreaking topic for a blog post. Provide a summary of the developments and why the chosen topic is significant.",
+    description="Conduct in-depth research on the latest Technology breakthroughs. Analyze their potential impact on various industries and society as a whole. Identify a topic that would captivate readers and provide valuable insights.",
     agent=researcher,
-    expected_output="A summary of the latest AI developments and a chosen topic for the blog post, highlighting its significance."
+    expected_output="A comprehensive summary of cutting-edge tech developments, focusing on one breakthrough topic. Include its technical aspects, real-world applications, and potential future implications.",
+    max_iterations=10,  # Increase iteration limit
+    timeout=300  # Increase time limit
 )
 
 writing_task = Task(
-    description="Write a 1000-word blog post about the chosen AI topic. Ensure it is engaging and informative for a general audience. Start with a catchy title and include a compelling introduction, informative body, and a strong conclusion.",
+    description="Transform the research findings into a compelling 1200-word blog post. Use analogies, real-world examples, and a conversational tone to make the content relatable and engaging.",
     agent=writer,
-    expected_output="A 1000-word blog post with a catchy title, engaging introduction, informative body, and strong conclusion, covering the chosen AI topic."
+    expected_output="A captivating 1200-word blog post that hooks readers from the first sentence, explains the topic clearly, and leaves the audience inspired about the future of technology.",
+    max_iterations=10,  # Increase iteration limit
+    timeout=300  # Increase time limit
 )
 
 editing_task = Task(
-    description="Review and edit the blog post for clarity, coherence, and correctness. Ensure it is engaging, free of errors, and flows well. Maintain the title on its own line at the beginning.",
+    description="Refine the blog post for clarity, coherence, and impact. Ensure technical accuracy while maintaining accessibility for a general audience. Optimize the structure for online readability.",
     agent=editor,
-    expected_output="An edited and polished version of the blog post, free of errors and with improved clarity and coherence."
+    expected_output="A polished, error-free blog post with improved flow, precise language, and enhanced engagement factors such as subheadings, pull quotes, or callout boxes.",
+    max_iterations=10,  # Increase iteration limit
+    timeout=300  # Increase time limit
 )
 
 formatting_task = Task(
-    description="Format the blog post using HTML tags. Use appropriate headings (h1 for title, h2 for subtitles), paragraphs, bullet points where necessary, and add inline styles for improved readability. Ensure the content is visually appealing and well-organized. don not osummerise ensure the whole content required is in the file after the tittle display the teaser without the word teaser and then the rest of the content can follo ",
+    description="Transform the edited content into an visually appealing HTML format. Use modern web design principles to enhance readability and engagement. Incorporate appropriate tags for SEO and accessibility.ensure all the contents are incoporated",
     agent=formatter,
-    expected_output="An HTML-formatted version of the blog post with appropriate styling and structure.with all the contents needed"
+    expected_output="A beautifully formatted HTML version of the blog post, featuring a clean layout, strategic use of white space, and CSS styles that enhance the reading experience across devices.do not",
+    max_iterations=10,  # Increase iteration limit
+    timeout=300  # Increase time limit
 )
 
 publishing_task = Task(
-    description="Prepare the formatted blog post for web publication. Create a 60-word teaser for the blog preview, and ensure all elements (title, content, teaser) are properly separated.",
+    description="Prepare the blog post for publication and promotion. Create an irresistible teaser that will drive clicks. Suggest meta descriptions, keywords, and social media snippets to boost visibility.",
     agent=publisher,
-    expected_output="A fully formatted blog post ready for web publication, including a separate title, HTML-formatted content, and a 60-word teaser."
+    expected_output="A publication-ready package including the formatted blog post, a compelling 60-word teaser, SEO elements, and social media promotional content to maximize the post's reach and engagement.",
+    max_iterations=10,  # Increase iteration limit
+    timeout=300  # Increase time limit
 )
 
 # Create the crew
@@ -179,6 +188,11 @@ def generate_blog_post():
             content = result.result
         else:
             content = str(result)
+
+        # Check if the expected HTML tags are present
+        if '<h1>' not in content or '</h1>' not in content:
+            logging.error("Expected HTML tags not found in content.")
+            return None
 
         # Parse the result to extract title, content, and teaser
         # Assuming the formatter has wrapped the title in <h1> tags
